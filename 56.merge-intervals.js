@@ -9,19 +9,25 @@
  * @param {number[][]} intervals
  * @return {number[][]}
  */
-var merge = function (intervals) {w
+var merge = function (intervals) {
   const array = [];
   for (let i = 0; i < intervals.length; i++) {
+    const [imin, imax] = intervals[i];
+    let maxInterval = intervals[i];
     for (let j = i + 1; j < intervals.length; j++) {
-      const [imin, imax] = intervals[i];
       const [jmin, jmax] = intervals[j];
-      if (imax <= jmin) {
+      let min = imin;
+      let max = imax;
+      if (imax >= jmin && imin <= jmax) {
         max = jmax;
-        min = imin;
       }
-      if (jmax <= imin) {
-        max = imax;
+      if (jmax <= imin && imax >= jmin) {
         min = jmin;
+      }
+      if (maxInterval[0] <= min && maxInterval[1] >= max) {
+      } else {
+        maxInterval = [min, max];
+        array.push([min, max]);
       }
     }
   }

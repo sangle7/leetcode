@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=39 lang=javascript
+ * @lc app=leetcode id=40 lang=javascript
  *
- * [39] Combination Sum
+ * [40] Combination Sum II
  */
 
 // @lc code=start
@@ -10,7 +10,8 @@
  * @param {number} target
  * @return {number[][]}
  */
-var combinationSum = function (candidates, target) {
+var combinationSum2 = function (candidates, target) {
+  let sortedCandidates = candidates.sort((a, b) => a - b);
   const solutions = [];
 
   const subFunc = (arr, out) => {
@@ -19,9 +20,15 @@ var combinationSum = function (candidates, target) {
       solutions.push(out);
     }
     if (sumOut < target) {
-      for (let i = 0; i < arr.length; i++) {
+      let i = 0;
+      while (i < arr.length) {
         const newOut = [...out, arr[i]];
-        subFunc(arr.slice(i), newOut);
+        subFunc(arr.slice(i + 1), newOut);
+        let j = i + 1;
+        while (arr[i] === arr[j]) {
+          j++;
+        }
+        i = j;
       }
     }
   };
@@ -30,7 +37,8 @@ var combinationSum = function (candidates, target) {
     return arr.reduce((pre, elem) => pre + elem, 0);
   }
 
-  subFunc(candidates, []);
+  subFunc(sortedCandidates, []);
+
   return solutions;
 };
 // @lc code=end
