@@ -16,30 +16,25 @@ var numDecodings = function (s) {
   if (s.indexOf('00') > -1) {
     return 0;
   }
-
-  let notValidCount = 0;
-  for (let i = 0; i < s.length - 1; i++) {
-    if (s[i] > 2 || (s[i] === '2' && s[i + 1] > 6)) {
-      notValidCount++;
+  let validCount = 0;
+  const subFunc = (str) => {
+    if (!str) {
+      validCount++;
+      return;
     }
-
-    if (s[i] === '0') {
-      notValidCount += 2;
-      if (s[i - 1] && s[i - 1] > 2) {
-        return 0;
+    // 首位是0就不管了
+    if (str[0] != 0) {
+      subFunc(str.substr(1));
+      if (str.length > 1 && str.substr(0, 2) < 27) {
+        subFunc(str.substr(2));
       }
-    }
-  }
-  if (s[s.length - 1] === '0') {
-    if (s[s.length - 2] > 2) {
-      return 0;
-    }
-    if (s.length < 3 || s[s.length - 3] === '0') {
-      notValidCount++;
     } else {
-      notValidCount += 2;
+      return;
     }
-  }
-  return s.length - notValidCount;
+  };
+
+  subFunc(s);
+
+  return validCount;
 };
 // @lc code=end

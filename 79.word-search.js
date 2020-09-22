@@ -21,7 +21,6 @@ var exist = function (board, word) {
   const hasGone = {};
 
   let findOne = false;
-  let doneAll = false;
 
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < columns; j++) {
@@ -36,12 +35,10 @@ var exist = function (board, word) {
   return findOne;
 
   function serachForNext(t, wordIndex) {
-    console.error(t, wordIndex);
     if (wordIndex === word.length) {
       findOne = true;
     }
     const [i, j] = t.split('-').map((e) => parseInt(e));
-    // const previous = hasGone[`${i}-${j}`] || [];
     if (i < rows - 1 && board[i + 1][j] === word[wordIndex]) {
       const key = `${i + 1}-${j}`;
       serachForNext(key, wordIndex + 1);
@@ -61,25 +58,4 @@ var exist = function (board, word) {
   }
 };
 
-/*
-[
-["a","a","a"],
-["a","b","b"],
-["a","b","b"],
-["b","b","b"],
-["b","b","b"],
-["a","a","a"],
-["b","b","b"],
-["a","b","b"],
-["a","a","b"],
-["a","b","a"]
-]
-"aabaaaabbb" */
-
-/*
-[
-["A","B","C","E"],
-["S","F","E","S"],
-["A","D","E","E"]
-] */
 // @lc code=end

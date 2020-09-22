@@ -16,7 +16,8 @@ var rotate = function (matrix) {
     for (let j = 0; j < width; j++) {
       //matrix[i][j] => matrix[j][matrix.length - 1-i]
       tmp[`${j}_${width - 1 - i}`] = matrix[j][width - 1 - i];
-      matrix[j][width - 1 - i] = tmp[i + '_' + j] != undefined  ? tmp[i + '_' + j] : matrix[i][j];
+      matrix[j][width - 1 - i] =
+        tmp[i + '_' + j] != undefined ? tmp[i + '_' + j] : matrix[i][j];
     }
   }
   // return matrix
