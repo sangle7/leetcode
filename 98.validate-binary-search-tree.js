@@ -17,32 +17,17 @@
  * @param {TreeNode} root
  * @return {boolean}
  */
-var isValidBST = function (root) {
-  let state = true;
-  if (!root) {
-    return true;
+var isValidBST = function (root, min, max) {
+  if (!root) return true;
+  if (max !== null && root.val >= max) {
+    return false;
   }
-  const subFunc = (node) => {
-    if (!node.left && !node.right) {
-      return;
-    }
-    if (node.left) {
-      if (node.left.val >= node.val) {
-        state = false;
-      } else {
-        subFunc(node.left);
-      }
-    }
+  if (min !== null && root.val <= min) {
+    return false;
+  }
+  const leftSide = isValidBST(root.left, min, root.val);
+  const rightSide = isValidBST(root.right, root.val, max);
 
-    if (node.right) {
-      if (node.right.val <= node.val) {
-        state = false;
-      } else {
-        subFunc(node.right);
-      }
-    }
-  };
-  subFunc(root);
-  return state;
+  return leftSide && rightSide;
 };
 // @lc code=end

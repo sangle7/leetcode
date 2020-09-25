@@ -17,35 +17,21 @@
  * @return {boolean}
  */
 var isSymmetric = function (root) {
-  const arr = [];
-  const arr2 = [];
-  const subFunc1 = (node) => {
-    if (!node) {
-      arr.push(undefined);
-    } else {
-      arr.push(node.val);
-      subFunc1(node.left);
-      subFunc1(node.right);
-    }
-  };
-
-  const subFunc2 = (node) => {
-    if (!node) {
-      arr2.push(undefined);
-    } else {
-      arr2.push(node.val);
-      subFunc2(node.right);
-      subFunc2(node.left);
-    }
-  };
-
-
-  subFunc1(root);
-  subFunc2(root);
-
-  console.error(arr);
-  console.error(arr2);
-
-  return arr2.join('') === arr.join('');
+  if (root == null) return true;
+  return isMirror(root.left, root.right);
 };
+
+function isMirror(leftSub, rightSub) {
+  if (leftSub == null && rightSub == null) {
+    return true;
+  }
+  if (leftSub == null || rightSub == null) {
+    return false;
+  }
+  return (
+    leftSub.val === rightSub.val &&
+    isMirror(leftSub.left, rightSub.right) &&
+    isMirror(leftSub.right, rightSub.left)
+  );
+}
 // @lc code=end
