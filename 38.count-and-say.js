@@ -52,52 +52,34 @@
  * @param {number} n
  * @return {string}
  */
-var countAndSay = function(n) {
-  if (n < 13) {
-    return map[n];
+ var countAndSay = function (n) {
+  if (n === 1) {
+    return '1';
   }
-  let key = 13;
-  while (key <= n) {
-    const newStr = analysizeStr(map[key - 1]);
-    map[key] = newStr;
-    key++;
-  }
-  return map[n];
+  const pre = countAndSay(n - 1); //'1211'
+
+  return read(pre);
 };
 
-function analysizeStr(string) {
-  const arr = string.split('');
-  const p = arr.reduce(
-    (pre, elem, index) => {
-      if (pre.pre === elem) {
-        pre.count++;
-      } else {
-        pre.str += `${pre.count}${pre.pre}`;
-        pre.count = 1;
+function read(str) {
+  let res = '';
+  let pre = '';
+  let count = 0;
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === pre) {
+      count++;
+    } else {
+      if (count) {
+        res += String(count);
+        res += pre;
       }
-      pre.pre = elem;
-      return pre;
-    },
-    {
-      str: '',
-      count: 0,
-      pre: arr[0]
+      pre = str[i];
+      count = 1;
     }
-  );
-  return p.str + p.count + p.pre;
+  }
+  if (count) {
+    res += String(count);
+    res += pre;
+  }
+  return res;
 }
-
-var map = {
-  1: '1',
-  2: '11',
-  3: '21',
-  4: '1211',
-  5: '111221',
-  6: '312211',
-  7: '13112221',
-  8: '1113213211',
-  9: '31131211131221',
-  10: '13211311123113112211',
-  11: '11131221133112132113212221',
-  12: '3113112221232112111312211312113211'
-};

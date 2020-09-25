@@ -41,7 +41,30 @@
  * @param {number} n
  * @return {void} Do not return anything, modify nums1 in-place instead.
  */
-var merge = function(nums1, m, nums2, n) {
-  nums1.splice(m,n,...nums2)
-  nums1 = nums1.sort((a, b) => a - b);
+var merge = function (nums1, m, nums2, n) {
+  let i = 0;
+
+  if (nums2[0] < nums1[0]) {
+    nums1.unshift(nums2[0]);
+    nums1.pop();
+    nums2.shift();
+  }
+
+  while (i < m + n && nums2.length) {
+    if (nums1[i] <= nums2[0] && nums1[i + 1] >= nums2[0]) {
+      nums1.splice(i + 1, 0, nums2[0]);
+      nums1.pop();
+      nums2.shift();
+    } else {
+      i++;
+    }
+  }
+
+  let count = nums2.length;
+
+  if (count > 0) {
+    nums1.splice(m + n - count, count, ...nums2.slice(-count));
+  }
+
+  return nums1;
 };
