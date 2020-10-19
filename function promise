@@ -1,0 +1,60 @@
+function Promise(executor) {
+  let self = this;
+
+  self.status = 'pending';
+  self.value = undefined;
+  self.reason = undefined;
+  self.onResolvedCallback = [];
+  self.onRejectedCallback = [];
+
+  function resolve(value) {
+    if (self.status === 'pending') {
+      self.value = value;
+      self.status = 'resolved';
+      for (var i = 0; i < self.onResolvedCallback.length; i++) {
+        self.onResolvedCallback[i](value);
+      }
+    }
+  }
+  function reject(reason) {
+    if (self.status === 'pending') {
+      self.reason = reason;
+      self.status = 'rejectd';
+      for (var i = 0; i < self.onRejectedCallback.length; i++) {
+        self.onRejectedCallback[i](value);
+      }
+    }
+  }
+
+  try {
+    executor(resolve, reject);
+  } catch (e) {
+    reject(e);
+  }
+}
+
+Promise.prototype.then = function (onResolved, onRejected) {
+  var self = this;
+  var promise2;
+
+  onResolved = typeof onResolved === 'function' ? onResolved : function (v) {};
+  onRejected = typeof onRejected === 'function' ? onRejected : function (r) {};
+
+  if (self.status === 'resolved') {
+    return (promise2 = new Promise(function (resolve, reject) {
+
+    }));
+  }
+
+  if (self.status === 'rejected') {
+    return (promise2 = new Promise(function (resolve, reject) {
+
+    }));
+  }
+
+  if (self.status === 'pending') {
+    return (promise2 = new Promise(function (resolve, reject) {
+      
+    }));
+  }
+};

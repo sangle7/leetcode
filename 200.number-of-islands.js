@@ -17,47 +17,48 @@ var numIslands = function (grid) {
   const rows = grid.length;
   const columns = grid[0].length;
 
+  let visited = {};
+
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < columns; j++) {
-      if (grid[i][j] === '1' || grid[i][j] === '2') {
-        if (isIsland(i, j)) {
-          num++;
-        }
-        grid[i][j] = '2';
+      if (grid[i][j] === '1' && !visited[i + '_' + j]) {
+        drawIsland([[i, j]]);
+        num++;
       }
     }
   }
 
   return num;
 
-  function isIsland(i, j) {
-    const arr = [
-      i > 0 ? grid[i - 1][j] : 0,
-      i < rows - 1 ? grid[i + 1][j] : 0,
-      j > 0 ? grid[i][j - 1] : 0,
-      j < columns - 1 ? grid[i][j + 1] : 0,
-    ];
-
-    if (i > 0 && grid[i - 1][j] === '1') {
-      grid[i - 1][j] = '2';
+  function drawIsland(r) {
+    if (!r.length) {
+      return;
     }
+    const arr = [];
+    for (let k = 0; k < r.length; k++) {
+      const [i, j] = r[k];
+      visited[i + '_' + j] = true;
 
-    if (i < rows - 1 && grid[i + 1][j] === '1') {
-      grid[i + 1][j] = '2';
+      checkAndPush(arr, i - 1, j);
+      checkAndPush(arr, i + 1, j);
+      checkAndPush(arr, i, j - 1);
+      checkAndPush(arr, i, j + 1);
     }
+    drawIsland(arr);
+  }
 
-    if (j > 0 && grid[i][j - 1] === '1') {
-      grid[i][j - 1] = '2';
+  function checkAndPush(arr, row, col) {
+    if (
+      row >= 0 &&
+      row < rows &&
+      col >= 0 &&
+      col < columns &&
+      !visited[row + '_' + col] &&
+      grid[row][col] === '1'
+    ) {
+      visited[row + '_' + col] = true;
+      arr.push([row, col]);
     }
-
-    if (j < columns - 1 && grid[i][j + 1] === '1') {
-      grid[i][j + 1] = '2';
-    }
-
-    if (arr.indexOf('2') > -1) {
-      return false;
-    }
-    return true;
   }
 };
 // @lc code=end
