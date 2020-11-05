@@ -11,35 +11,61 @@
  */
 var calculate = function (s) {
   const operators = ['+', '-', '*', '/'];
-  const stack = [];
-  let operatorTemp = '';
-  let tmp = '';
-  for (let i = 0; i < s.length; i++) {
-    if (operators.indexOf(s[i]) === -1) {
-      tmp += s[i];
-      if (i === s.length - 1) {
-        if (operatorTemp) {
-          const num1 = stack.pop();
-          stack.push(calculateSimple(num1, parseInt(tmp), operatorTemp));
-        } else {
-          stack.push(parseInt(tmp));
-        }
-      }
+  const simpleOperators = ['+', '-'];
+  const complexOperators = ['*', '/'];
+  const stack = []; //存放栈
+
+  const array = [];
+  let start = -1;
+  let end = 0;
+  while (end < s.length) {
+    if (operators.indexOf(s[end]) !== -1) {
+      array.push(parseInt(s.substring(start + 1, end)));
+      array.push(s[end]);
+      start = end;
+    }
+    end++;
+  }
+  array.push(parseInt(s.substring(start + 1)));
+
+  let i = 0;
+  while (i < array.length) {
+    // 数字直接入栈
+    if (operators.indexOf(array[i]) === -1) {
+      stack.push(array[i]);
+      i++;
+    } else if (simpleOperators.indexOf(array[i]) > -1) {
+      // 简单符号也直接入栈
+      stack.push(array[i]);
+      i++;
     } else {
-      if (operatorTemp) {
-        const num1 = stack.pop();
-        stack.push(calculateSimple(num1, parseInt(tmp), operatorTemp));
-      } else {
-        stack.push(parseInt(tmp));
-        operatorTemp = s[i];
-      }
-      tmp = '';
+      // 复杂符号
+      const pre = stack.pop();
+      const res = calculateSimple(pre, array[i + 1], array[i]);
+      stack.push(res);
+      i += 2;
     }
   }
 
-  console.error(stack)
+  // console.error(stack);
+  // [3, "+", 2, "-", 4]
 
-  return stack[0]
+  //最后按顺序执行stack
+  const tmp = [];
+  i = 0;
+  while (i < stack.length) {
+    if (operators.indexOf(stack[i]) === -1) {
+      tmp.push(stack[i]);
+      i += 1;
+    } else {
+      const pre = tmp.pop();
+      const res = calculateSimple(pre, stack[i + 1], stack[i]);
+      tmp.push(res);
+      i += 2;
+    }
+  }
+
+  return tmp[0];
 };
 
 function calculateSimple(num1, num2, operator) {

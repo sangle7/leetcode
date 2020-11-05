@@ -1,26 +1,31 @@
 /*
- * @lc app=leetcode id=56 lang=javascript
+ * @lc app=leetcode id=57 lang=javascript
  *
- * [56] Merge Intervals
+ * [57] Insert Interval
  */
 
 // @lc code=start
 /**
  * @param {number[][]} intervals
+ * @param {number[]} newInterval
  * @return {number[][]}
  */
-var merge = function (intervals) {
+var insert = function (intervals, newInterval) {
+  const newIntervals = intervals.concat([newInterval]);
+
   let i = 0;
   let prevMerged = false;
-  while (i < intervals.length - 1) {
+  while (i < newIntervals.length - 1) {
     let j = i + 1;
-    while (j < intervals.length) {
-      const res = mergeTwoInterval(intervals[i], intervals[j]);
+    while (j < newIntervals.length) {
+      const res = mergeTwoInterval(newIntervals[i], newIntervals[j]);
       if (res.length === 1) {
-        intervals[i] = res[0];
-        intervals.splice(j, 1);
+        newIntervals[i] = res[0];
+        newIntervals.splice(j, 1);
         prevMerged = true;
       } else {
+        newIntervals[i] = res[0]
+        newIntervals[j] = res[1]
         j++;
       }
     }
@@ -30,7 +35,7 @@ var merge = function (intervals) {
       prevMerged = false;
     }
   }
-  return intervals;
+  return newIntervals;
 };
 
 function mergeTwoInterval(interval1, interval2) {
