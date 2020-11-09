@@ -20,9 +20,11 @@ var lengthOfLIS = function (nums) {
 
   const subFunc = (index, len) => {
     max = Math.max(max, len);
+    let isFirstTime = true;
     for (let i = index + 1; i < nums.length; i++) {
-      if (nums[i] > nums[index]) {
+      if (nums[i] > nums[index] && (isFirstTime || nums[i] < nums[i - 1])) {
         subFunc(i, len + 1);
+        isFirstTime = false;
       }
     }
   };
