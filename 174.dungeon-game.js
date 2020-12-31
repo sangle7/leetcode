@@ -9,62 +9,40 @@
  * @param {number[][]} dungeon
  * @return {number}
  */
+/*
+  [1,-3,3]
+  [0,-2,0]
+  [-3,-3,-3]
+
+  dp
+  [1,3,3]
+  [1,2,2]
+  [3,5,5]
+
+  fx
+  [2,1,4]
+  [2,1,4]
+  [1,1,1]
+*/
 var calculateMinimumHP = function (dungeon) {
-  // f(x) 为到某个点的总和
-  // s(x) 为到某个点的沿途最小值
-  const fMap = {};
-  const sMap = {};
+  const m = dungeon.length;
+  const n = dungeon[0].length;
+  // dp(m)(n) 为到某个点的所需最小值
+  // fx(m)(n) 为到某个点的总和
+  let dp = new Array(m + 1).fill(1);
+  dp = dp.map((el) => new Array(n + 1));
 
-  const rows = dungeon.length;
-  const cols = dungeon[0].length;
-
-  const f = (m, n) => {
-    if (fMap[m + '_' + n] != undefined) {
-      return fMap[m + '_' + n];
+  dp[m][n - 1] = 1;
+  dp[m - 1][n] = 1;
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = n - 1; j >= 0; j--) {
+      dp[i][j] = Math.max(
+        1,
+        Math.min(dp[i + 1][j], dp[i][j + 1]) - dungeon[i][j]
+      );
     }
-    let v = 0;
-    if (m === 0 && n === 0) {
-      v = dungeon[0][0];
-    } else if (m === -1 || n === -1) {
-      v = 0;
-    } else if (s(m - 1, n) < s(m, n - 1)) {
-      v = f(m, n - 1) + dungeon[m][n];
-    } else if (s(m - 1, n) === s(m, n - 1)) {
-      v = Math.max(f(m, n - 1), f(m - 1, n)) + dungeon[m][n];
-    } else {
-      v = f(m - 1, n) + dungeon[m][n];
-    }
-    fMap[m + '_' + n] = v;
-    return v;
-  };
-
-  const s = (m, n) => {
-    if (sMap[m + '_' + n] != undefined) {
-      return sMap[m + '_' + n];
-    }
-    let v = 0;
-
-    if (m === 0 && n === 0) {
-      v = dungeon[0][0];
-    } else if (m === -1 || n === -1) {
-      v = -Infinity;
-    } else {
-      let min = Math.max(s(m - 1, n), s(m, n - 1));
-      let fmn = f(m, n);
-      v = Math.min(min, fmn);
-    }
-
-    sMap[m + '_' + n] = v;
-    return v;
-  };
-
-  let m = rows - 1;
-  let n = cols - 1;
-
-  let res = s(m, n);
-
-  console.error(fMap, sMap);
-
-  return res < 0 ? 1 - res : 1;
+  }
+  console.error(dp);
+  return dp[0][0];
 };
 // @lc code=end

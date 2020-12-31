@@ -13,7 +13,6 @@
  */
 var findLadders = function (beginWord, endWord, wordList) {
   let solutions = [];
-  let length = Infinity;
 
   if (wordList.indexOf(endWord) === -1) {
     return solutions;
@@ -22,7 +21,7 @@ var findLadders = function (beginWord, endWord, wordList) {
   if (wordList.indexOf(beginWord) === -1) {
     wordList.push(beginWord);
   }
-  //buildMap
+
   const linkMap = {};
   for (let elem1 of wordList) {
     for (let elem2 of wordList) {
@@ -33,34 +32,41 @@ var findLadders = function (beginWord, endWord, wordList) {
     }
   }
 
-  // console.error(linkMap);
-  //{1:[2,3],2:[1],3:[1]}
-  const subFunc = (from, arr) => {
-    // console.error(from, arr);
-    if (arr.length > length || !linkMap[from]) {
-      return;
-    }
-    if (from === beginWord) {
-      if (arr.length < length) {
-        solutions = [];
-      }
-      solutions.push([from, ...arr]);
-      // console.error(arr.length);
-      length = arr.length;
-      return;
+  const bfs = (map) => {
+    if (map[beginWord]) {
+      return handle({ [beginWord]: map[beginWord] });
     } else {
-      for (let elem of linkMap[from]) {
-        if (arr.indexOf(elem) === -1) {
-          subFunc(elem, [from, ...arr]);
+      let newMap = {};
+      for (let key in map) {
+        try {
+          for (let elem of linkMap[key]) {
+            newMap[elem] = newMap[elem] || {};
+            newMap[elem][key] = map[key];
+          }
+        } catch (error) {
+          return [];
         }
       }
+      return bfs(newMap);
     }
   };
 
-  subFunc(endWord, []);
-
-  return solutions;
+  return bfs({ [endWord]: {} });
 };
+
+function handle(obj) {
+  const result = [];
+  const subFunc = (o, arr) => {
+    if (Object.keys(o).length === 0) {
+      result.push(arr);
+    }
+    for (let key in o) {
+      subFunc(o[key], [...arr, key]);
+    }
+  };
+  subFunc(obj, []);
+  return result;
+}
 
 function oneLetterDiff(s1, s2) {
   let count = 0;

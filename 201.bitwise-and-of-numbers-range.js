@@ -10,8 +10,11 @@
  * @param {number} n
  * @return {number}
  */
-var rangeBitwiseAnd = function(m, n) {
-    
+var rangeBitwiseAnd = function (m, n) {
+  let d = Infinity;
+  while ((m & d) !== (n & d)) {
+      d <<= 1;
+  }
+  return m & d;
 };
 // @lc code=end
-
